@@ -4,13 +4,29 @@ import data from "./data";
 
 const Accordion = () => {
     const [selected, setSelected] = useState(null);
+    const [multipleSelected, setMultipleSelected] = useState([]);
     const [isOn, setIsOn] = useState(false);
     function handleSingleSelection(getCurrentId) {
         setSelected(prevId => (prevId === getCurrentId ? null : getCurrentId));
     }
+    function handleMultiSelection(getCurrentId) {
+        let cpyMultipleSelected = [...multipleSelected];
+        const findIndexOfCurrentId = cpyMultipleSelected.indexOf(getCurrentId);
+        // console.log(findIndexOfCurrentId);
+
+        if (findIndexOfCurrentId === -1) {
+            cpyMultipleSelected.push(getCurrentId);
+        }
+        else {
+            cpyMultipleSelected.splice(findIndexOfCurrentId, 1);
+        }
+        setMultipleSelected(cpyMultipleSelected);
+    }
+    // console.log(selected, multipleSelected);
     const handleToggle = () => {
         setIsOn(!isOn);
-    };
+    }
+
 
     return (
         <div className="h-screen flex flex-col items-center justify-center bg-zinc-100 ">
@@ -37,23 +53,28 @@ const Accordion = () => {
                         data.map((dataItem) => (
                             <div
                                 key={dataItem.id}
-                                onClick={() => handleSingleSelection(dataItem.id)}
+                                onClick={
+                                    isOn ?
+                                        () => handleMultiSelection(dataItem.id)
+                                        : () => handleSingleSelection(dataItem.id)
+                                }
                                 className="w-full shadow-md border-2">
                                 <div className="w-full p-4 flex flex-col">
                                     <div className="w-full flex items-center justify-between">
                                         <h3 className="font-semibold">{dataItem.question}</h3>
                                         <span>
-                                            {selected === dataItem.id ?
-                                                (<div>
-                                                    <AiOutlineMinus />
-                                                </div>) : <AiOutlinePlus />
+                                            {
+                                                selected === dataItem.id ?
+                                                    (<div>
+                                                        <AiOutlineMinus />
+                                                    </div>) : <AiOutlinePlus />
                                             }
                                         </span>
                                     </div>
-                                    {selected === dataItem.id ?
-                                        (<div className="mt-4 ">
-                                            {dataItem.answer}
-                                        </div>) : null
+                                    {
+                                        isOn ? multipleSelected.indexOf(dataItem.id) !== -1 && <div className="mt-4 ">{dataItem.answer}</div> : selected === dataItem.id && <div className="mt-4 ">{dataItem.answer}</div>
+
+
                                     }
 
                                 </div>
