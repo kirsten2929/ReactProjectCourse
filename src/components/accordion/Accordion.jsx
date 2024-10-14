@@ -64,10 +64,15 @@ const Accordion = () => {
                                         <h3 className="font-semibold">{dataItem.question}</h3>
                                         <span>
                                             {
-                                                selected === dataItem.id ?
-                                                    (<div>
+                                                isOn ?
+                                                    (multipleSelected.indexOf(dataItem.id) !== -1 ?
                                                         <AiOutlineMinus />
-                                                    </div>) : <AiOutlinePlus />
+                                                        : <AiOutlinePlus />) :
+                                                    (selected === dataItem.id ?
+
+                                                        <AiOutlineMinus />
+                                                        : <AiOutlinePlus />)
+
                                             }
                                         </span>
                                     </div>
